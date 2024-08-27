@@ -162,4 +162,4 @@ cython_debug/
 #.idea/
 
 token.json
-uap_credential.json
+credential/
