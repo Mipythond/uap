@@ -113,6 +113,18 @@ class DatabaseClient:
         finally:
             self.session.close()
     
+    # 最新データを取得するメソッド
+    def get_latest_user_fit_data(self, user_id):
+        """指定されたuser_idの最新のfit_dataを取得"""
+        try:
+            # クエリの最適化
+            fit_data = self.session.query(FitData).filter(
+                FitData.user_id == user_id
+            ).order_by(FitData.datetime.desc()).limit(1).first()
+            return fit_data
+        finally:
+            self.session.close()
+    
     def get_user_fit_data_for_current_month(self, user_id):
         """指定されたuser_idの今月のfit_dataを取得"""
         try:
