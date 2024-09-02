@@ -55,9 +55,9 @@ class GoogleFitClient:
         results = {
             "user_id": self.user_id,
             "steps": 0,
-            "distance": 0.0,
-            "weights": [],
-            "body_fat_percentages": []
+            "distance": 0,
+            "weight": 0.0,
+            "body_fat_percentage": 0.0
         }
 
         for key, data_source in data_sources.items():
@@ -71,17 +71,19 @@ class GoogleFitClient:
             elif key == "distance":
                 for point in points:
                     for value in point['value']:
-                        results["distance"] += value.get('fpVal', 0.0)
-
+                        results["distance"] += int(value.get('fpVal', 0.0))
+                        
             elif key == "weights":
                 for point in points:
-                    for value in point['value']:
-                        results["weights"].append(value.get('fpVal', 0.0))
+                    if point['value']:  # 'value' が空でないことを確認
+                        # 最後の要素を取得して追加
+                        results["weight"] += round(point['value'][-1].get('fpVal', 0.0), 1)
 
             elif key == "body_fat":
                 for point in points:
-                    for value in point['value']:
-                        results["body_fat_percentages"].append(value.get('fpVal', 0.0))
+                    if point['value']:  # 'value' が空でないことを確認
+                        # 最後の要素を取得して追加
+                        results["body_fat_percentage"] += point['value'][-1].get('fpVal', 0.0)
 
         return results
 
@@ -93,16 +95,3 @@ class GoogleFitClient:
             datasetId=dataset_id
         ).execute()
         return dataset.get('point', [])
-
-# if __name__ == "__main__":
-#     user_id = 3  # 任意のユーザーID
-#     google_fit = GoogleFitClient(user_id)
-    
-#     # まとめてデータを取得
-#     fit_data = google_fit.fetch_combined_data()
-
-#     print(f"User_id: {fit_data['user_id']}")
-#     print(f"Steps: {fit_data['steps']}")
-#     print(f"Distance: {fit_data['distance']} meters")
-#     print(f"Weights: {fit_data['weights']}")
-#     print(f"Body Fat Percentages: {fit_data['body_fat_percentages']}")
