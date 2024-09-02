@@ -95,15 +95,15 @@ class DatabaseClient:
         finally:
             self.session.close()
 
-    def add_fit_data(self, user_id, steps, distance, weight, fat):
+    def add_fit_data(self, fit_data):
         try:
             new_fit_data = FitData(
-                user_id=user_id,
+                user_id=fit_data['user_id'],
                 datetime=datetime.now(),
-                steps=steps,
-                distance=distance,
-                weight=weight,
-                fat=fat
+                steps=fit_data['steps'],
+                distance=fit_data['distance'],
+                weight=fit_data['weight'],
+                fat=fit_data['body_fat_percentage']
             )
             self.session.add(new_fit_data)
             self.session.commit()
@@ -130,11 +130,3 @@ class DatabaseClient:
             return fit_data
         finally:
             self.session.close()
-            
-# 使用例
-if __name__ == "__main__":
-    db_client = DatabaseClient()
-    user_fit_data_this_month = db_client.get_user_fit_data_for_current_month(5)
-    for data in user_fit_data_this_month:
-        print(f"Date: {data.datetime}, Steps: {data.steps}, Distance: {data.distance}, Weight: {data.weight}, Fat: {data.fat}")
-
