@@ -6,6 +6,7 @@ services:
       dockerfile: python/Dockerfile
     ports:
       - "8000:80"
+      - "8501:8501" # streamlit
     volumes:
       - ..:/workspace
     
