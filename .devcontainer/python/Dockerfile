@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.12.5
 
 # パッケージリストを更新し、一般的な依存関係をインストール
 RUN apt-get update && apt-get upgrade -y
@@ -16,3 +16,6 @@ RUN pip install -r /workspace/requirements.txt
 
 # ワークディレクトリを設定
 WORKDIR /workspace
+
+# コンテナ起動時に実行されるコマンドを指定
+ENTRYPOINT ["streamlit", "run", "app.py"]
