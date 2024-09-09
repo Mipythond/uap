@@ -171,7 +171,7 @@ with col1:
 # タイトル
 with col2:
     st.write("""
-    # United Athlete Program
+    # United Athletes Program
     """)
     
 # グラフ描画
