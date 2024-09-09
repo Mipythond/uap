@@ -55,7 +55,7 @@ class GoogleFitClient:
         results = {
             "user_id": self.user_id,
             "steps": 0,
-            "distance": 0,
+            "distance": 0.0,
             "weight": 0.0,
             "body_fat_percentage": 0.0
         }
@@ -71,7 +71,7 @@ class GoogleFitClient:
             elif key == "distance":
                 for point in points:
                     for value in point['value']:
-                        results["distance"] += int(value.get('fpVal', 0.0))
+                        results["distance"] += round(((value.get('fpVal', 0.0))/1000), 3)
                         
             elif key == "weights":
                 for point in points:
