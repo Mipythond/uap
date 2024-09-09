@@ -39,9 +39,14 @@ class GoogleFitClient:
         return build('fitness', 'v1', credentials=self.creds)
 
     def get_dates(self):
-        today = datetime.datetime.now(datetime.UTC).date()
-        start_date = datetime.datetime(today.year, today.month, today.day, tzinfo=datetime.UTC)
-        end_date = start_date + datetime.timedelta(days=1)
+         # 現在のUTC時間を取得
+        now_utc = datetime.datetime.now(datetime.UTC)
+        # 日本時間 (GMT+9) の0時を取得
+        # UTC時間に変換すると、前日の15:00
+        start_jst = datetime.datetime(now_utc.year, now_utc.month, now_utc.day, tzinfo=datetime.UTC) - datetime.timedelta(hours=9)
+        # JSTの0時から24時の範囲をUTCに変換（JSTの次の日の0時 = UTCの15:00）
+        start_date = start_jst
+        end_date = start_jst + datetime.timedelta(days=1)
         return start_date, end_date
 
     def fetch_combined_data(self):
