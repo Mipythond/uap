@@ -132,6 +132,13 @@ class DatabaseClient:
             now = datetime.now()
             current_year = now.year
             current_month = now.month
+            
+            # 月初だけは先月のデータを表示
+            if now.day == 1:
+                if current_month == 1:
+                    current_month = 12
+                else:
+                    current_month-= 1
 
             # 指定したユーザーの今月のデータを取得
             fit_data = self.session.query(FitData).filter(
