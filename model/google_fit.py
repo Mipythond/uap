@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime, timezone, timedelta
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -40,13 +40,12 @@ class GoogleFitClient:
 
     def get_dates(self):
          # 現在のUTC時間を取得
-        now_utc = datetime.datetime.now(datetime.UTC)
-        # 日本時間 (GMT+9) の0時を取得
-        # UTC時間に変換すると、前日の15:00
-        start_jst = datetime.datetime(now_utc.year, now_utc.month, now_utc.day, tzinfo=datetime.UTC) - datetime.timedelta(hours=9)
+        now_utc = datetime.now(timezone.utc)
+        # utcの00:00を取得してjstに変換
+        end_jst = datetime(now_utc.year, now_utc.month, now_utc.day, tzinfo=timezone.utc) - timedelta(hours=9)
         # JSTの0時から24時の範囲をUTCに変換（JSTの次の日の0時 = UTCの15:00）
-        start_date = start_jst
-        end_date = start_jst + datetime.timedelta(days=1)
+        start_date = end_jst - timedelta(days=1)  # 前日の00:00(JST)
+        end_date = end_jst # 前日の24:00(JST)
         return start_date, end_date
 
     def fetch_combined_data(self):

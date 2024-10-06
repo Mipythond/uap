@@ -95,11 +95,11 @@ class DatabaseClient:
         finally:
             self.session.close()
 
-    def add_fit_data(self, fit_data):
+    def add_fit_data(self, fit_data, datetime=datetime.now()):
         try:
             new_fit_data = FitData(
                 user_id=fit_data['user_id'],
-                datetime=datetime.now(),
+                datetime=datetime,
                 steps=fit_data['steps'],
                 distance=fit_data['distance'],
                 weight=fit_data['weight'],
