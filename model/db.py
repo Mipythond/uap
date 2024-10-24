@@ -149,3 +149,26 @@ class DatabaseClient:
             return fit_data
         finally:
             self.session.close()
+    
+    def update_fit_data(self, fit_data):
+        """取得したデータをデータベースに保存または更新"""
+        try:
+            # 該当のデータが存在するかを確認
+            existing_data = self.session.query(FitData).filter(
+                FitData.user_id == fit_data['user_id'],
+                extract('year', FitData.datetime) == fit_data['start_date'].year,
+                extract('month', FitData.datetime) == fit_data['start_date'].month,
+                extract('day', FitData.datetime) == fit_data['start_date'].day
+            ).first()
+            # データが既存の場合のみ更新する
+            if existing_data:
+                existing_data.steps = fit_data['steps']
+                existing_data.distance = fit_data['distance']
+                
+            # データベースに反映
+            self.session.commit()
+        except:
+            self.session.rollback()
+            raise
+        finally:
+            self.session.close()
