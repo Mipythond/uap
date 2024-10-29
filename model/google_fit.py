@@ -129,7 +129,7 @@ class GoogleFitClient:
         results_list = []
         
         # 一日づつ過去データを取得する
-        for days_ago in range(0, days_ago_period, 1):
+        for days_ago in range(1, days_ago_period, 1):
             start_date, end_date = self.get_past_dates(days_ago)
             results = {
                 "user_id": self.user_id,
@@ -137,7 +137,7 @@ class GoogleFitClient:
                 "distance": 0.0,
                 "weight": 0.0,
                 "body_fat_percentage": 0.0,
-                "start_date": start_date
+                "datetime": start_date + timedelta(days=1)# db探索用 dayのみ参照 一日ずらす
             }
             
             for key, data_source in data_sources.items():

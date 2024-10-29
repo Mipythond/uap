@@ -151,14 +151,14 @@ class DatabaseClient:
             self.session.close()
     
     def update_fit_data(self, fit_data):
-        """取得したデータをデータベースに保存または更新"""
+        """データベースに該当日のデータがあれば更新"""
         try:
             # 該当のデータが存在するかを確認
             existing_data = self.session.query(FitData).filter(
                 FitData.user_id == fit_data['user_id'],
-                extract('year', FitData.datetime) == fit_data['start_date'].year,
-                extract('month', FitData.datetime) == fit_data['start_date'].month,
-                extract('day', FitData.datetime) == fit_data['start_date'].day
+                extract('year', FitData.datetime) == fit_data['datetime'].year,
+                extract('month', FitData.datetime) == fit_data['datetime'].month,
+                extract('day', FitData.datetime) == fit_data['datetime'].day
             ).first()
             # データが既存の場合のみ更新する
             if existing_data:
