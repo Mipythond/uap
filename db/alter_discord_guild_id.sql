@@ -1,0 +1,2 @@
+ALTER TABLE tbl_group
+ADD COLUMN discord_guild_id BIGINT NOT NULL DEFAULT 0;
