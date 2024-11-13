@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from sqlalchemy.sql import extract  # extract関数をインポート
 from datetime import datetime
+import json
 
 # ベースクラスの作成
 Base = declarative_base()
@@ -12,6 +14,7 @@ class Group(Base):
 
     group_id = Column(Integer, primary_key=True, autoincrement=True)
     group_name = Column(String, nullable=False)
+    discord_guild_id = Column(Integer, nullable=False)
 
     # リレーションシップ
     users = relationship("User", back_populates="group")
@@ -23,6 +26,8 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     user_name = Column(String, nullable=False)
     group_id = Column(Integer, ForeignKey('tbl_group.group_id'))
+    discord_user_id = Column(Integer, nullable=False)
+    discord_roles = Column(JSON)
 
     # リレーションシップ
     group = relationship("Group", back_populates="users")
@@ -92,6 +97,13 @@ class DatabaseClient:
         try:
             users = self.session.query(User).filter_by(group_id=group_id).all()
             return users
+        finally:
+            self.session.close()
+    
+    def get_discord_guild_id(self, group_id):
+        try:
+            group = self.session.query(Group).filter_by(group_id=group_id).first()
+            return group.discord_guild_id
         finally:
             self.session.close()
 
@@ -170,5 +182,23 @@ class DatabaseClient:
         except:
             self.session.rollback()
             raise
+        finally:
+            self.session.close()
+    
+    # ユーザーのdiscord_rolesを更新するメソッド
+    def update_discord_roles(self, user_id, roles):
+        try:
+            # ユーザーを取得
+            user = self.session.query(User).filter_by(user_id=user_id).first()
+            if user:
+                # rolesリストをJSON形式に変換してdiscord_rolesカラムに設定
+                user.discord_roles = json.dumps(roles)
+                self.session.commit()
+                print(f"User ID {user_id} のdiscord_rolesを更新しました。")
+            else:
+                print(f"User ID {user_id} が見つかりません。")
+        except Exception as e:
+            self.session.rollback()
+            print(f"エラーが発生しました: {e}")
         finally:
             self.session.close()
