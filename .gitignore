@@ -163,3 +163,4 @@ cython_debug/
 
 token.json
 credential/
+discord.json
