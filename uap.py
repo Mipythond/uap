@@ -17,6 +17,7 @@ def main():
         gf_data = gf_client.fetch_combined_data()
         gf_data['steps'] *= user.steps_coefficient #steps補正
         fit_data_list.append(gf_data)
+        print(gf_data)
     
     # db: weight,fatが未更新の場合は直近のデータを引き継ぎ
     for fit_data in fit_data_list:
@@ -28,9 +29,9 @@ def main():
     # db: fit_date_listをdbへ書き込む
     # fitdataを取得する時間が早すぎると正しい値が取得できないので、
     # 朝10時にこのコードを実行するが、前日のデータを取得するのでdbに書き込む値はずらす
-    datetime_db = datetime.now() - timedelta(hours=2)
-    for fit_data in fit_data_list:
-        db_client.add_fit_data(fit_data, datetime_db)
+    # datetime_db = datetime.now() - timedelta(hours=2)
+    # for fit_data in fit_data_list:
+    #     db_client.add_fit_data(fit_data, datetime_db)
     
 if __name__ == "__main__":
     main()

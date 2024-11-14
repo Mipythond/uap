@@ -50,12 +50,12 @@ class FitData(Base):
     user = relationship("User", back_populates="fit_data")
 
 # AWS RDSの接続情報
-DATABASE_TYPE = ''
-DB_HOST = ''
-DB_NAME = ''
-DB_USER = ''
-DB_PASSWORD = ''
-DB_PORT = ''
+DATABASE_TYPE = 'mysql+pymysql'
+DB_HOST = 'rds-uap.ctc4g60uw746.ap-northeast-1.rds.amazonaws.com'
+DB_NAME = 'uap'
+DB_USER = 'admin'
+DB_PASSWORD = 'perseus1123_uap'
+DB_PORT = '3306'  # MySQLのデフォルトポート
 
 # 接続URLを生成
 DATABASE_URL = f'{DATABASE_TYPE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
