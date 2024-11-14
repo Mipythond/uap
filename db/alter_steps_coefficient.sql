@@ -1,0 +1,2 @@
+ALTER TABLE tbl_user
+ADD COLUMN steps_coefficient FLOAT NOT NULL DEFAULT 1;
