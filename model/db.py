@@ -28,7 +28,8 @@ class User(Base):
     group_id = Column(Integer, ForeignKey('tbl_group.group_id'))
     discord_user_id = Column(Integer, nullable=False)
     discord_roles = Column(JSON)
-
+    steps_coefficient = Column(Float, nullable=False)
+    
     # リレーションシップ
     group = relationship("Group", back_populates="users")
     fit_data = relationship("FitData", back_populates="user")
